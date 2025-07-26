@@ -11,6 +11,11 @@ const port = 3000;
 app.use(cors());
 app.use(express.json());
 
+// 根路由测试
+app.get('/', (req, res) => {
+  res.send('Hello from backend!');
+});
+
 // Initialize Google Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-pro" }); // Changed model to gemini-pro for general use
