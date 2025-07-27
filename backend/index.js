@@ -24,7 +24,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Using 
 
 // Initialize Google Cloud Text-to-Speech client
 const ttsClient = new textToSpeech.TextToSpeechClient({
-    apiKey: process.env.GOOGLE_TTS_API_KEY, // Only provide apiKey for API Key authentication
+    credentials: JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON),
 });
 
 // API Endpoint for chat
@@ -49,9 +49,12 @@ app.post('/api/chat', async (req, res) => {
 
         const [audioResponse] = await ttsClient.synthesizeSpeech(request);
 
-        // Step 3: Send audio data back to frontend
-        res.set('Content-Type', 'audio/mpeg');
-        res.send(audioResponse.audioContent);
+        // Step 3: Send both text and audio data back to the frontend
+        const audioBase64 = audioResponse.audioContent.toString('base64');
+        res.json({ 
+            text: aiResponseText, 
+            audio: audioBase64 
+        });
 
     } catch (error) {
         console.error('Error in /api/chat:', error);
