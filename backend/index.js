@@ -43,7 +43,7 @@ app.post('/api/chat', async (req, res) => {
         // Step 2: Convert AI response text to speech
         const request = {
             input: { text: aiResponseText },
-            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Chirp3-HD-PuckMALE', ssmlGender: 'MALE' }, // Chinese male voice
+            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Wavenet-C', ssmlGender: 'MALE' }, // Chinese male voice
             audioConfig: { audioEncoding: 'MP3' },
         };
 
