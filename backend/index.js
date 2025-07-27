@@ -39,15 +39,7 @@ app.post('/api/chat', async (req, res) => {
 
     try {
         // Step 1: Get AI response from Gemini
-        const chat = model.startChat({
-            history: [
-                { role: "user", parts: "你好" },
-                { role: "model", parts: "你好，我是朱自清。很高兴与你谈谈《春》。" },
-            ],
-            generationConfig: { maxOutputTokens: 100 },
-        });
-
-        const result = await chat.sendMessage(userText);
+        const result = await model.generateContent(userText);
         const response = await result.response;
         const aiResponseText = response.text();
 
