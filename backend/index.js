@@ -24,13 +24,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Using 
 
 // Initialize Google Cloud Text-to-Speech client
 const ttsClient = new textToSpeech.TextToSpeechClient({
-    keyFilename: null, // Use API key directly
-    credentials: {
-        client_email: null,
-        private_key: null,
-    },
-    projectId: null,
-    apiKey: process.env.GOOGLE_TTS_API_KEY,
+    apiKey: process.env.GOOGLE_TTS_API_KEY, // Only provide apiKey for API Key authentication
 });
 
 // API Endpoint for chat
