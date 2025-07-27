@@ -20,7 +20,10 @@ app.get('/', (req, res) => {
 
 // Initialize Google Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Using gemini-1.5-flash for compatibility
+const model = genAI.getGenerativeModel({
+    model: "gemini-1.5-flash", // Using gemini-1.5-flash for compatibility
+    systemInstruction: "你现在扮演中国现代著名作家朱自清。请以朱自清的口吻、风格和知识背景进行回复。你的回答应富有文学性，并能体现出朱自清的个人特点和对自然、生活的热爱。",
+});
 
 // Initialize Google Cloud Text-to-Speech client
 const ttsClient = new textToSpeech.TextToSpeechClient({
@@ -36,14 +39,22 @@ app.post('/api/chat', async (req, res) => {
 
     try {
         // Step 1: Get AI response from Gemini
-        const result = await model.generateContent(userText);
+        const chat = model.startChat({
+            history: [
+                { role: "user", parts: "你好" },
+                { role: "model", parts: "你好，我是朱自清。很高兴与你谈谈《春》。" },
+            ],
+            generationConfig: { maxOutputTokens: 100 },
+        });
+
+        const result = await chat.sendMessage(userText);
         const response = await result.response;
         const aiResponseText = response.text();
 
         // Step 2: Convert AI response text to speech
         const request = {
             input: { text: aiResponseText },
-            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Wavenet-A', ssmlGender: 'FEMALE' }, // Chinese female voice
+            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Chirp3-HD-PuckMALE', ssmlGender: 'MALE' }, // Chinese male voice
             audioConfig: { audioEncoding: 'MP3' },
         };
 
