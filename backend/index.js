@@ -18,7 +18,7 @@ app.get('/', (req, res) => {
 
 // Initialize Google Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" }); // Changed model to gemini-pro for general use
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Changed model to gemini-1.5-flash for better compatibility
 
 // VoiceRSS API Key
 const voiceRSSKey = process.env.VOICERSS_API_KEY;
