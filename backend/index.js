@@ -1,8 +1,10 @@
-require('dotenv').config();
+require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const textToSpeech = require('@google-cloud/text-to-speech');
+const fs = require('fs'); // Not strictly needed for this version, but often useful
+const util = require('util'); // Not strictly needed for this version, but often useful
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -18,44 +20,48 @@ app.get('/', (req, res) => {
 
 // Initialize Google Gemini AI
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Changed model to gemini-1.5-flash for better compatibility
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" }); // Using gemini-1.5-flash for compatibility
 
-// VoiceRSS API Key
-const voiceRSSKey = process.env.VOICERSS_API_KEY;
+// Initialize Google Cloud Text-to-Speech client
+const ttsClient = new textToSpeech.TextToSpeechClient({
+    keyFilename: null, // Use API key directly
+    credentials: {
+        client_email: null,
+        private_key: null,
+    },
+    projectId: null,
+    apiKey: process.env.GOOGLE_TTS_API_KEY,
+});
 
 // API Endpoint for chat
 app.post('/api/chat', async (req, res) => {
+    const userText = req.body.text;
+    if (!userText) {
+        return res.status(400).send('Missing text in request body');
+    }
+
     try {
-        const { text } = req.body;
-        if (!text) {
-            return res.status(400).send('No text provided.');
-        }
+        // Step 1: Get AI response from Gemini
+        const result = await model.generateContent(userText);
+        const response = await result.response;
+        const aiResponseText = response.text();
 
-        // 1. Get text response from Gemini
-        // For a more persistent chat, you might want to manage chat history.
-        // For simplicity, this example treats each request as a new turn.
-        const result = await model.generateContent(text);
-        const aiResponseText = result.response.text();
+        // Step 2: Convert AI response text to speech
+        const request = {
+            input: { text: aiResponseText },
+            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Wavenet-A', ssmlGender: 'FEMALE' }, // Chinese female voice
+            audioConfig: { audioEncoding: 'MP3' },
+        };
 
-        // 2. Get voice response from VoiceRSS
-        // Ensure voiceRSSKey is defined and valid
-        if (!voiceRSSKey) {
-            console.error('VoiceRSS API Key is not set in .env');
-            return res.status(500).send('VoiceRSS API Key is missing.');
-        }
+        const [audioResponse] = await ttsClient.synthesizeSpeech(request);
 
-        // Using a Chinese voice (Zhen-hua)
-        const voiceUrl = `http://api.voicerss.org/?key=${voiceRSSKey}&hl=zh-cn&src=${encodeURIComponent(aiResponseText)}&c=MP3&f=44khz_16bit_stereo&v=Zhen-hua`;
-
-        const audioResponse = await axios.get(voiceUrl, { responseType: 'arraybuffer' });
-
-        // 3. Send audio back to the frontend
+        // Step 3: Send audio data back to frontend
         res.set('Content-Type', 'audio/mpeg');
-        res.send(audioResponse.data);
+        res.send(audioResponse.audioContent);
 
     } catch (error) {
         console.error('Error in /api/chat:', error);
-        res.status(500).send('An error occurred on the server.');
+        res.status(500).send('Error processing request');
     }
 });
 
