@@ -6,8 +6,17 @@ const textToSpeech = require('@google-cloud/text-to-speech');
 
 const app = express();
 
-// This MUST be the first middleware to handle CORS preflight requests
-app.use(cors()); 
+app.use(cors({
+  origin: [
+    "https://zingy-axolotl-efe13e.netlify.app", // 你的前端域名
+    "http://localhost:3000"                      // 本地调试时也允许
+  ],
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+// ✅ 确保 OPTIONS 请求能正确返回
+app.options("*", cors()); 
 app.use(express.json());
 
 // --- Initialize Google Services ---
