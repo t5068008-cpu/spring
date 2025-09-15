@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "zinc-anvil-467203-n4",
+  "private_key_id": "3de6a15aea256c2c56ae890854010c595b73cb10",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCgD9W5DRYxAtH0\njwwwsmuwV6nR35L/yw8sQ+a8TmJ9dCNh3SIyJsc4VncOuF3bDqTvnzfuR4fzPtQW\nDjkl7VftFMut4cAxNu4AGSJqFD96qlgoGHIwuZxhOg0BApL8XZBWjv+3cjIeqtcp\ndhiZyiW2k2Ck+McYqx5Igvp2ZJrZfKiMEUFoqZg26Kx+KQBEJtV7PmaAPW2IC431\nroxUAwDMswK2v1xX62byTlxANY+JFhIsipNhxaYNcytLN6Z2iuKmPheuFVZqMMWX\nWZYhqYd5T9/6Z0nMoPb1DADarK1TGG3I9EtgL6sLiM9J+en63fDZ7ENICaS1wXDg\nYP+A76w1AgMBAAECggEAT9222eBCy2/JzYq3HXFZtKL5VISHd+UdjAvRjPJbyJdz\ntDhAAOBClcTnIUwzYMOc3wgGQ3ojxub5soukTl1wexbeTsQPPz9WYGwqNN4nkpB+\n7nrMN63V7tmldXSQXSZeiCJQTHvJsG20cLbBrbMlQEWneom75n4z3SCl0v9+GLiF\nkstiDZ3qUQf7YMzFT6Nkwy7PVncUVz0qws05Sr8PeR5afhzum0XELzOeiN+Tsvem\nZjFP1FtpInQAqHlRDS2XDtQZXoJ+8ucSv9Xkjsdxvf0XUnaEy7Vcq9aJuRlfuZYh\nHYXNs76L6ab/qfQVv6SOyHX1zpLScqRMyP3ZR6puHQKBgQDWkYlvMrhtq687+XsR\nmYeUz8fNU3SxFoBo+0KcA7etlvuFlPI8+lmybggwp6x0VIs3AUfsoFoJVJeFWhVo\nvRk0b5kJVMNzXsfc6QYPeo32tJsGTrjFlaEMFwYNUXzOZ714hy29B742fOYdmj/D\niUezH/xt7Vyec8AYg8Vl7iqiRwKBgQC+9/KOYnCFVttufg4q0UoVSZo6yNOUggC+\niNyHD0KUMV+P4q88SEvTBk6gjMS5RDBZD3iu/mUMTYkyj8lWIzvFhgJIwKxBbgR6\nzv9XzT2Ff/EwohfQ0KQGAdRGaUr7dmAEgHOGbzTfiDuFDHUw8aCmUqZIUckc6vBG\nkranMN5fowKBgGBo3k7XhGTKup8BFxouWOw1fDo24Hzddm81TpWZWgOmjndUGI/r\nkTgKFqX+AQ/4GOFrMu0Qk8QTfU2Oz4XTSar05dd6faOuF7GcBnwX/ge22N05q+4j\nsEwlYDPFxIVduZWZb6S7AO2sqxzr/PCYE15Z5etitrX/nnWlZ6HIJOHrAoGATI3Z\nDnsn4EwRaxndVAzSRfZbfXVEXCRBaCA1R282oXGpfWTCGshgnRfKLVJBCoPrXch1\n+LDCkUwD0+EQNReqvmQaRk/2vcP8x75zXh9Iqlu/tF9GbM828bGKBy/ufx/VHfjg\nVuP9rh5Ovedgk15JqGM5hYRDuvPznlbyIdPVUUECgYAa0yrQXjElr0XH+9GmLZ6K\ndE5etCBzMNtxtl1OUVBgAvVV1EeD84djUoFf6+G4Wr7yQ5XXsZpLJKOIG0CVOZY3\n0OUAkGgj7xXRfV3GunDt1OshlEFsTeEtmsyD/9MWunxGWZ1L28/tuLrh9CksiQcw\nql/iYY07hWh/2NFznPAiGw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "id-779@zinc-anvil-467203-n4.iam.gserviceaccount.com",
+  "client_id": "112605149579581809089",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/id-779%40zinc-anvil-467203-n4.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
