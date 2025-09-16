@@ -20,10 +20,18 @@ app.options("*", cors());
 app.use(express.json());
 
 // --- Initialize Google Services ---
+// 1. Gemini for text generation
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.0-pro-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
 
-const credentialsJson = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+// 2. Google Cloud Text-to-Speech
+// Manually parse the credentials from the environment variable.
+// This is robust against extra quotes or formatting issues.
+const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
+if (!credentialsString) {
+    throw new Error("The GOOGLE_APPLICATION_CREDENTIALS_JSON environment variable is not set.");
+}
+const credentialsJson = JSON.parse(credentialsString);
 const ttsClient = new textToSpeech.TextToSpeechClient({
     credentials: {
         client_email: credentialsJson.client_email,
