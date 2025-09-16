@@ -41,6 +41,12 @@ app.get('/', (req, res) => {
 
 // 2. The actual API endpoint (the "secret back door")
 app.post('/api/chat', async (req, res) => {
+    // --- 诊断日志 ---
+    console.log("Received request for /api/chat.");
+    console.log("GEMINI_API_KEY is present:", !!process.env.GEMINI_API_KEY);
+    console.log("GOOGLE_APPLICATION_CREDENTIALS_JSON is present:", !!process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
+    // --- 诊断日志结束 ---
+
     try {
         const { text } = req.body;
         if (!text) {
