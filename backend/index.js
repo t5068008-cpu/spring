@@ -22,7 +22,7 @@ app.use(express.json());
 // --- Initialize Google Services ---
 // 1. Gemini for text generation
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro-latest" });
+const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 // 2. Google Cloud Text-to-Speech
 // Manually parse the credentials from the environment variable.
