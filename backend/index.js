@@ -14,7 +14,7 @@ try {
         throw new Error("FATAL: GEMINI_API_KEY environment variable is not set.");
     }
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+    // We don't initialize a specific model here anymore, just the main client
 
     const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
     if (!credentialsString) {
@@ -56,37 +56,28 @@ app.post('/api/chat', async (req, res) => {
     }
 
     try {
-        const { text } = req.body;
-        if (!text) {
-            return res.status(400).send('No text provided.');
+        // --- DIAGNOSTIC STEP: List available models ---
+        console.log("Running diagnostic: Listing available models...");
+        const models = await genAI.listModels();
+        let modelNames = [];
+        for await (const m of models) {
+            // We only care about models that support generateContent
+            if (m.supportedGenerationMethods.includes("generateContent")) {
+                 modelNames.push(m.name);
+            }
         }
-
-        // --- 优化1：添加系统指令，限定AI的角色和知识范围 ---
-        const fullPrompt = `你是散文家朱自清。请只根据你的散文《春》来回答以下问题。保持回答简洁、优美、并符合你的写作风格。问题是：“${text}”`;
+        console.log("Available models that support generateContent:", modelNames);
         
-        const result = await model.generateContent(fullPrompt);
-        const aiResponseText = result.response.text();
-
-        // --- 优化2：移除Markdown星号，避免TTS读出 ---
-        const cleanedText = aiResponseText.replace(/\*/g, "");
-
-        const request = {
-            input: { text: cleanedText },
-            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Wavenet-C' },
-            audioConfig: { audioEncoding: 'MP3' },
-        };
-
-        const [response] = await ttsClient.synthesizeSpeech(request);
-        
-        // --- 优化3：返回JSON，同时包含文字和音频 ---
-        res.json({
-            text: cleanedText,
-            audio: response.audioContent.toString('base64') // 音频用Base64编码
+        // Send the list of models back to the frontend for debugging.
+        return res.json({
+            diagnostic: "Available Models",
+            models: modelNames
         });
+        // --- END DIAGNOSTIC STEP ---
 
     } catch (error) {
-        console.error('Error in /api/chat handler:', error);
-        res.status(500).send('An error occurred on the server during the request.');
+        console.error('Error in /api/chat handler during diagnostic:', error);
+        res.status(500).send('An error occurred during the diagnostic check.');
     }
 });
 
