@@ -14,8 +14,8 @@ try {
         throw new Error("FATAL: GEMINI_API_KEY environment variable is not set.");
     }
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // Use the standard, compatible model name
-            model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
+    // Reverting to the original, standard model name
+    model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
     if (!credentialsString) {
