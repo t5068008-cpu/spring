@@ -14,6 +14,8 @@ try {
         throw new Error("FATAL: GEMINI_API_KEY environment variable is not set.");
     }
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+    // Use the standard, compatible model name
+    model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
 
     const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
     if (!credentialsString) {
@@ -55,29 +57,33 @@ app.post('/api/chat', async (req, res) => {
     }
 
     try {
-        // --- CORRECTED DIAGNOSTIC STEP: List available models ---
-        console.log("Running corrected diagnostic: Listing available models...");
-        
-        // The correct way to list models is via a temporary model instance
-        const modelInfo = await genAI.getGenerativeModel({ model: "gemini-1.0-pro" }).listModels();
-
-        let modelNames = [];
-        for await (const m of modelInfo) {
-            if (m.supportedGenerationMethods.includes("generateContent")) {
-                 modelNames.push(m.name);
-            }
+        const { text } = req.body;
+        if (!text) {
+            return res.status(400).send('No text provided.');
         }
-        console.log("Available models that support generateContent:", modelNames);
+
+        const fullPrompt = `你是散文家朱自清。请只根据你的散文《春》来回答以下问题。保持回答简洁、优美、并符合你的写作风格。问题是：“${text}”`;
         
-        return res.json({
-            diagnostic: "Available Models",
-            models: modelNames
+        const result = await model.generateContent(fullPrompt);
+        const aiResponseText = result.response.text();
+        const cleanedText = aiResponseText.replace(/\*/g, "");
+
+        const request = {
+            input: { text: cleanedText },
+            voice: { languageCode: 'cmn-CN', name: 'cmn-CN-Wavenet-C' },
+            audioConfig: { audioEncoding: 'MP3' },
+        };
+
+        const [response] = await ttsClient.synthesizeSpeech(request);
+        
+        res.json({
+            text: cleanedText,
+            audio: response.audioContent.toString('base64')
         });
-        // --- END DIAGNOSTIC STEP ---
 
     } catch (error) {
-        console.error('Error in /api/chat handler during diagnostic:', error);
-        res.status(500).send('An error occurred during the diagnostic check.');
+        console.error('Error in /api/chat handler:', error);
+        res.status(500).send('An error occurred on the server during the request.');
     }
 });
 
