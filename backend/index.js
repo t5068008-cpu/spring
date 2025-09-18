@@ -14,7 +14,6 @@ try {
         throw new Error("FATAL: GEMINI_API_KEY environment variable is not set.");
     }
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // We don't initialize a specific model here anymore, just the main client
 
     const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
     if (!credentialsString) {
@@ -56,19 +55,20 @@ app.post('/api/chat', async (req, res) => {
     }
 
     try {
-        // --- DIAGNOSTIC STEP: List available models ---
-        console.log("Running diagnostic: Listing available models...");
-        const models = await genAI.listModels();
+        // --- CORRECTED DIAGNOSTIC STEP: List available models ---
+        console.log("Running corrected diagnostic: Listing available models...");
+        
+        // The correct way to list models is via a temporary model instance
+        const modelInfo = await genAI.getGenerativeModel({ model: "gemini-1.0-pro" }).listModels();
+
         let modelNames = [];
-        for await (const m of models) {
-            // We only care about models that support generateContent
+        for await (const m of modelInfo) {
             if (m.supportedGenerationMethods.includes("generateContent")) {
                  modelNames.push(m.name);
             }
         }
         console.log("Available models that support generateContent:", modelNames);
         
-        // Send the list of models back to the frontend for debugging.
         return res.json({
             diagnostic: "Available Models",
             models: modelNames
