@@ -15,7 +15,7 @@ try {
     }
     genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     // Use the standard, compatible model name
-        model = genAI.getGenerativeModel({ model: "gemini-1.5-flash-latest" });
+            model = genAI.getGenerativeModel({ model: "gemini-1.0-pro" });
 
     const credentialsString = process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON;
     if (!credentialsString) {
