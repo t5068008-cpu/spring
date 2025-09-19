@@ -11,7 +11,7 @@ app.use(express.json());
 
 // --- Initialize Google Services ---
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
 const credentialsJson = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS_JSON);
 const ttsClient = new textToSpeech.TextToSpeechClient({
