@@ -33,7 +33,10 @@ app.post('/api/chat', async (req, res) => {
             return res.status(400).send('No text provided.');
         }
 
-        const result = await model.generateContent(text);
+        // Prepend a system prompt to guide the model's response
+        const promptedText = `请你以朱自清的身份，并根据他的散文《春》来回答我的问题。请确保回答简洁。我的问题是：“${text}”`;
+
+        const result = await model.generateContent(promptedText);
         const aiResponseText = result.response.text();
 
         const request = {
@@ -44,8 +47,11 @@ app.post('/api/chat', async (req, res) => {
 
         const [response] = await ttsClient.synthesizeSpeech(request);
         
-        res.set('Content-Type', 'audio/mpeg');
-        res.send(response.audioContent);
+        // Send both text and audio back in a JSON object
+        res.json({
+            text: aiResponseText,
+            audio: response.audioContent.toString('base64')
+        });
 
     } catch (error) {
         console.error('Error in /api/chat:', error);
